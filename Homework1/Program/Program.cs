@@ -11,4 +11,7 @@ var secondMatrix = new Matrix(secondPath!);
 firstMatrix.PrintMatrix();
 secondMatrix.PrintMatrix();
 
+var resultMatrix = Matrix.Multiplicate(firstMatrix, secondMatrix);
+resultMatrix.PrintMatrix();
+
 return 0;

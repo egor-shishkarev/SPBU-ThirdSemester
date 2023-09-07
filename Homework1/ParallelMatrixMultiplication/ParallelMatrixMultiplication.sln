@@ -11,8 +11,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Program", "..\Program\Progr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{CD1A33FB-A4EF-40A5-80EB-E61EF249A12F}"
 	ProjectSection(SolutionItems) = preProject
+		..\TestFiles\BigMatrix1.txt = ..\TestFiles\BigMatrix1.txt
+		..\TestFiles\BigMatrix2.txt = ..\TestFiles\BigMatrix2.txt
+		..\TestFiles\CommonMatrix.txt = ..\TestFiles\CommonMatrix.txt
+		..\TestFiles\Empty.txt = ..\TestFiles\Empty.txt
 		..\Matrix1.txt = ..\Matrix1.txt
 		..\Matrix2.txt = ..\Matrix2.txt
+		..\TestFiles\Matrix2x3.txt = ..\TestFiles\Matrix2x3.txt
+		..\TestFiles\MatrixWithFractionalNumbers.txt = ..\TestFiles\MatrixWithFractionalNumbers.txt
+		..\TestFiles\NotSupportedSymbols.txt = ..\TestFiles\NotSupportedSymbols.txt
+		..\TestFiles\Matrix3x3.txt = ..\TestFiles\Matrix3x3.txt
+		..\TestFiles\WrongCountOfElementsInRow.txt = ..\TestFiles\WrongCountOfElementsInRow.txt
+		..\TestFiles\WrongFormatOfMatrix.txt = ..\TestFiles\WrongFormatOfMatrix.txt
 	EndProjectSection
 EndProject
 Global

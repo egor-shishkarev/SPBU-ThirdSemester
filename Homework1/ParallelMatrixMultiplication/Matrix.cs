@@ -21,12 +21,22 @@ public class Matrix
     public List<List<int>> Content;
 
     /// <summary>
-    /// Contructor for empty matrix.
+    /// Constructor for empty matrix.
     /// </summary>
     public Matrix()
     {
         Width = 0;
         Height = 0;
+        Content = new List<List<int>>();
+    }
+
+    /// <summary>
+    /// Contructor for matrix with given width and height.
+    /// </summary>
+    public Matrix(int width, int height)
+    {
+        Width = width;
+        Height = height;
         Content = new List<List<int>>();
     }
 
@@ -38,8 +48,8 @@ public class Matrix
     {
         Content = ReadMatrix(path);
         CheckMatrix();
-        Width = Content.Count;
-        Height = Content[0].Count;
+        Width = Content[0].Count;
+        Height = Content.Count;
     }
 
     /// <summary>
@@ -56,8 +66,28 @@ public class Matrix
             throw new NotSupportedException("Нельзя умножать матрицы, где количество элементов строки первой матрицы, " +
                 "отличается от количества элементов столбца второй матрицы!");
         }
-        return new Matrix();
+        var resultMatrix = new Matrix(firstMatrix.Width, secondMatrix.Height);
+        for (int i = 0; i < firstMatrix.Height; ++i)
+        {
+            var currentRow = new List<int>();
+            for (int j = 0; j < secondMatrix.Width; ++j)
+            {
+                var currentNumber = 0;
+                for (int k = 0; k < firstMatrix.Width; ++k)
+                {
+                    currentNumber += firstMatrix.Content[i][k] * secondMatrix.Content[k][j];
+                }
+                currentRow.Add(currentNumber);
+            }
+            resultMatrix.Content.AddRange(new List<List<int>>() { currentRow });
+        }
+        return resultMatrix;
     }
+
+    //public static Matrix MultiplicateWithMultithreading(Matrix firstMatrix, Matrix secondMatrix)
+    //{
+
+    //}
 
     /// <summary>
     /// Method, which reads matrix from file.
