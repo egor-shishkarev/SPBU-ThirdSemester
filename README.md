@@ -1,7 +1,7 @@
 ## This repository contains homework solutions from the [yurii-litvinov](https://github.com/yurii-litvinov)'s course, C#📗
 ____
 ## Homeworks
-- ## Homework 1
+- # Homework 1
   - [Parallel Matrix Multiplication](https://github.com/egor-shishkarev/SPBU-ThirdSemester/tree/Homework1/Homework1) 
 ____
 ## License
