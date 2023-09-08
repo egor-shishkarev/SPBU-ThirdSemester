@@ -1,6 +1,6 @@
 namespace Multiplication.Tests;
+
 using Matrices;
-using System.Globalization;
 
 public class MultiplitcationTests
 {
@@ -68,7 +68,7 @@ public class MultiplitcationTests
     {
         var firstMatrix = new Matrix(firstPath);
         var secondMatrix = new Matrix(secondPath);
-        List<List<int>> resultMatrix = new() { new List<int>() { 30, 36, 42 }, new List<int>() { 66, 81, 96 } };
+        List<List<int>> resultMatrix = new() { new List<int>() { 12, 12, 12 }, new List<int>() { 66, 81, 96 } };
         Assert.That(Matrix.Multiplicate(firstMatrix, secondMatrix).Content, Is.EqualTo(resultMatrix));
     }
 }

@@ -1,5 +1,7 @@
 ﻿namespace Matrices;
 
+using System.Text;
+
 /// <summary>
 /// Class of mathematical object - matrix.
 /// </summary>
@@ -46,8 +48,8 @@ public class Matrix
     /// <param name="path"></param>
     public Matrix(string path)
     {
-        Content = ReadMatrix(path);
-        CheckMatrix();
+        Content = Read(path);
+        Check();
         Width = Content[0].Count;
         Height = Content.Count;
     }
@@ -98,7 +100,7 @@ public class Matrix
     /// <exception cref="FileNotFoundException">File with such path doesn't exists.</exception>
     /// <exception cref="ArgumentException">File was empty.</exception>
     /// <exception cref="FormatException">Wrong format of matrix.</exception>
-    private static List<List<int>> ReadMatrix(string path)
+    private static List<List<int>> Read(string path)
     {
         if (path == null)
         {
@@ -132,7 +134,7 @@ public class Matrix
     /// Method, which checks the same number of elements in each row.
     /// </summary>
     /// <exception cref="FormatException">Different number of elements in rows.</exception>
-    private void CheckMatrix()
+    private void Check()
     {
         int currentLengthOLine = Content[0].Count;
         foreach(var line in Content)
@@ -147,7 +149,7 @@ public class Matrix
     /// <summary>
     /// Additional method to print matrix in console.
     /// </summary>
-    public void PrintMatrix()
+    public void Print()
     {
         foreach (var sublist in Content)
         {
@@ -157,5 +159,35 @@ public class Matrix
             }
             Console.Write("\n");
         }
+    }
+
+    /// <summary>
+    /// Method, which write martix in a specific file.
+    /// </summary>
+    /// <param name="path">Path to the file containing the result of the multiplication.</param>
+    /// <param name="matrix">Matrix containing the result of multiplication.</param>
+    public static void Write(string path, Matrix matrix)
+    {
+       var matrixToWrite = ToStringArray(matrix);
+       File.WriteAllText("../../../../ResultMatrix.txt", matrixToWrite);
+    }
+
+    /// <summary>
+    /// Additional method to respresent matrix in a string.
+    /// </summary>
+    /// <param name="matrix">Matrix, which we want to represent in string.</param>
+    /// <returns>Representation of matrix by string.</returns>
+    private static string ToStringArray(Matrix matrix)
+    {
+        var matrixInStringArray = new StringBuilder();
+        foreach (var row in matrix.Content)
+        {
+            foreach(var column in row)
+            {
+                matrixInStringArray.Append(column.ToString() + " ");
+            }
+            matrixInStringArray.Append("\n");
+        }
+        return matrixInStringArray.ToString();
     }
 }

@@ -1,17 +1,20 @@
 ﻿using Matrices;
 
-Console.Write("Введите пути к файлам, содержащие матрицы для умножения\nВведите первый путь => ");
-var firstPath = Console.ReadLine();
-Console.Write("Введите второй путь => ");
-var secondPath = Console.ReadLine();
+const string outputPath = "../../../../ResultMatrix.txt";
 
-var firstMatrix = new Matrix(firstPath!);
-var secondMatrix = new Matrix(secondPath!);
+if (args.Length < 2)
+{
+    Console.Error.WriteLine("Пути до файлов не были введены!");
+    return -1;
+}
 
-firstMatrix.PrintMatrix();
-secondMatrix.PrintMatrix();
+var firstMatrix = new Matrix(args[0]);
+var secondMatrix = new Matrix(args[1]);
 
 var resultMatrix = Matrix.Multiplicate(firstMatrix, secondMatrix);
-resultMatrix.PrintMatrix();
+
+Matrix.Write(outputPath, resultMatrix);
+
+Console.WriteLine($"Результат вычисления находится в файле {outputPath[12..]}");
 
 return 0;
