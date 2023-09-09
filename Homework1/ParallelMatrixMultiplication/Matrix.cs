@@ -109,7 +109,6 @@ public class Matrix
         var countOfThreads = countOfElementsInResultMatrix >= maxCountOfThreads ? maxCountOfThreads : countOfElementsInResultMatrix;
         var threads = new Thread[countOfThreads];
         var resultMatrix = new Matrix(firstMatrix.Height, secondMatrix.Width);
-        
         int countOfElementsForEachThread = Convert.ToInt32(Math.Ceiling((double)countOfElementsInResultMatrix / countOfThreads));
 
         for (var i = 0; i < threads.Length; ++i)
@@ -269,12 +268,10 @@ public class Matrix
         var newMatrix = new Matrix(width, height);
         for (int i = 0; i < height; ++i)
         {
-            var currentRow = new List<long>();
             for (int j = 0; j < width; ++j)
             {
-                currentRow.Add(random.Next(minInt, maxInt));
+                newMatrix.Content[i][j] = random.Next(minInt, maxInt);
             }
-            newMatrix.Content.Add(currentRow);
         }
         return newMatrix;
     }

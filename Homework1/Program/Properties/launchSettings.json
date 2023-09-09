@@ -2,7 +2,7 @@
   "profiles": {
     "Program": {
       "commandName": "Project",
-      "commandLineArgs": "../../../../TestFiles/BigMatrix1.txt\r\n../../../../TestFiles/BigMatrix2.txt"
+      "commandLineArgs": "../../../../Matrix1.txt\r\n../../../../Matrix2.txt"
     }
   }
 }

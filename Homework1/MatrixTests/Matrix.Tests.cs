@@ -1,9 +1,26 @@
-namespace Multiplication.Tests;
+namespace Matrices.Tests;
 
-using Matrices;
-
-public class MultiplitcationTests
+public class MatricesTests
 {
+    private bool CompareTwoMatrix(Matrix firstMatrix, Matrix secondMatrix)
+    {
+        if (firstMatrix.Width != secondMatrix.Width || firstMatrix.Height != secondMatrix.Height)
+        {
+            return false;
+        }
+        for (int i = 0; i < firstMatrix.Height; ++i)
+        {
+            for (int j = 0; j < firstMatrix.Width; ++j)
+            {
+                if (firstMatrix.Content[i][j] != secondMatrix.Content[i][j])
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     [TestCase(null)]
     public void NullPathShouldThrowExceptionTest(string path)
     {
@@ -71,21 +88,17 @@ public class MultiplitcationTests
         List<List<int>> resultMatrix = new() { new List<int>() { 12, 12, 12 }, new List<int>() { 66, 81, 96 } };
         Assert.That(Matrix.Multiplicate(firstMatrix, secondMatrix).Content, Is.EqualTo(resultMatrix));
     }
+
+    [TestCase("../../../../TestFiles/Matrix2x3.txt", "../../../../TestFiles/Matrix3x3.txt")]
+    [TestCase("../../../../TestFiles/BigMatrix1.txt", "../../../../TestFiles/BigMatrix2.txt")]
+    [TestCase("../../../../TestFiles/CommonMatrix.txt", "../../../../TestFiles/CommonMatrix.txt")]
+    public void MultiplicationWithMultithreadingAndWithoutShouldReturnSameResultTest(string firstPath, string secondPath)
+    {
+        var firstMatrix = new Matrix(firstPath);
+        var secondMatrix = new Matrix(secondPath);
+        var matrixWithoutMultithreading = Matrix.Multiplicate(firstMatrix, secondMatrix);
+        var matrixWithMultithreading = Matrix.MultiplicateWithMultithreading(firstMatrix, secondMatrix);
+        Assert.That(CompareTwoMatrix(matrixWithMultithreading, matrixWithoutMultithreading), Is.True);
+    }
 }
 
-/* Что добавить в тесты - 
-Проверка на корректное содержание файла (Что он есть, что в нем что-то есть, что там действительно матрица)
-Проверка на корректность подсчета умножения матриц
-Поехали конкретно по тестам:
-1)Нет пути - исключение
-2)Нет файла - исключение
-3)Пустой файл - исключение
-4)Что-то кроме цифр - исключение
-5)Не правильный формат матрицы - исключение
-6)Не правильное кол-во элементов - исключение
-7)Просто проверка на ввод матрицы
-8)Исключение на умножение матриц с разнымы кол-вом столбцов и строк
-9)Матрица с дробными числами - исключение
-10)Обычное умножение без многопоточности
-11)Проверка многопоточности на больших матрицах
-*/
