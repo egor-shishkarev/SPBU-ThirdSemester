@@ -254,4 +254,28 @@ public class Matrix
         }
         return currentElement;
     }
+
+    /// <summary>
+    /// Additional method to generate matrices with given parameters.
+    /// </summary>
+    /// <param name="width">Count of elements in row.</param>
+    /// <param name="height">Count of elements in column.</param>
+    /// <param name="minInt">Minimum integer number in matrix.</param>
+    /// <param name="maxInt">Maximum integer number in matrix.</param>
+    /// <returns>Matrix with given size and numbers.</returns>
+    public static Matrix Generate(int width, int height, int minInt, int maxInt)
+    {
+        var random = new Random();
+        var newMatrix = new Matrix(width, height);
+        for (int i = 0; i < height; ++i)
+        {
+            var currentRow = new List<long>();
+            for (int j = 0; j < width; ++j)
+            {
+                currentRow.Add(random.Next(minInt, maxInt));
+            }
+            newMatrix.Content.Add(currentRow);
+        }
+        return newMatrix;
+    }
 }

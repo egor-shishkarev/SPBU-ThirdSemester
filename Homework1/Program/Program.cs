@@ -1,7 +1,7 @@
 ﻿using Matrices;
 using System.Diagnostics;
 
-const string outputPath = "../../../../ResultMatrix.txt";
+//const string outputPath = "../../../../ResultMatrix.txt";
 
 if (args.Length < 2)
 {
@@ -25,8 +25,8 @@ stopwatch1.Stop();
 Console.WriteLine(stopwatch1.ElapsedMilliseconds);
 
 Console.WriteLine($"Результат прироста эффективности - {(double)stopwatch1.ElapsedMilliseconds / stopwatch.ElapsedMilliseconds}");
-Matrix.Write(outputPath, resultMatrixWithMultithreading);
+//Matrix.Write(outputPath, resultMatrixWithMultithreading);
 
-Console.WriteLine($"Результат вычисления находится в файле {outputPath[12..]}");
+//Console.WriteLine($"Результат вычисления находится в файле {outputPath[12..]}");
 
 return 0;
