@@ -255,28 +255,3 @@ public class Matrix
         return currentElement;
     }
 }
-
-/*
- Идея для многопоточности - 
- 1) Создать пустую матрицу
- 2) По количеству элементов в конечной матрице распределить задачи по потокам
- 3) Для каждого потока назначить номера элементов, которые мы хотим посчитать
- 4) С помощью доп функции считать элементы в матрице
-*/
-
-// Функция для генерации больших матриц
-//public static Matrix Generate(int width, int height, int minInt, int maxInt)
-//{
-//    var random = new Random();
-//    var newMatrix = new Matrix(width, height);
-//    for (int i = 0; i < height; ++i)
-//    {
-//        var currentRow = new List<long>();
-//        for (int j = 0; j < width; ++j)
-//        {
-//            currentRow.Add(random.Next(minInt, maxInt));
-//        }
-//        newMatrix.Content.Add(currentRow);
-//    }
-//    return newMatrix;
-//}
