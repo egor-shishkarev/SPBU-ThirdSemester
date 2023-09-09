@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matrix", "Matrix.csproj", "{B511C4EB-5847-41D1-906A-1BBC8627E5DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Matrix", "Matrix.csproj", "{B511C4EB-5847-41D1-906A-1BBC8627E5DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multiplication.Tests", "..\MultiplicationTest\Multiplication.Tests.csproj", "{12446D9A-93DD-4E23-AC8B-A1C5E953ED90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Multiplication.Tests", "..\MultiplicationTest\Multiplication.Tests.csproj", "{12446D9A-93DD-4E23-AC8B-A1C5E953ED90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Program", "..\Program\Program.csproj", "{A67C5722-13B5-4991-BEA0-4B871267AECB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Program", "..\Program\Program.csproj", "{A67C5722-13B5-4991-BEA0-4B871267AECB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{CD1A33FB-A4EF-40A5-80EB-E61EF249A12F}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,9 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решен
 		..\Matrix1.txt = ..\Matrix1.txt
 		..\Matrix2.txt = ..\Matrix2.txt
 		..\TestFiles\Matrix2x3.txt = ..\TestFiles\Matrix2x3.txt
+		..\TestFiles\Matrix3x3.txt = ..\TestFiles\Matrix3x3.txt
 		..\TestFiles\MatrixWithFractionalNumbers.txt = ..\TestFiles\MatrixWithFractionalNumbers.txt
 		..\TestFiles\NotSupportedSymbols.txt = ..\TestFiles\NotSupportedSymbols.txt
-		..\TestFiles\Matrix3x3.txt = ..\TestFiles\Matrix3x3.txt
+		..\ResultMatrix.txt = ..\ResultMatrix.txt
 		..\TestFiles\WrongCountOfElementsInRow.txt = ..\TestFiles\WrongCountOfElementsInRow.txt
 		..\TestFiles\WrongFormatOfMatrix.txt = ..\TestFiles\WrongFormatOfMatrix.txt
 	EndProjectSection

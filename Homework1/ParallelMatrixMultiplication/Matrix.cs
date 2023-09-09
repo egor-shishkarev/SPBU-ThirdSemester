@@ -1,6 +1,8 @@
 ﻿namespace Matrices;
 
+using System;
 using System.Text;
+using System.Threading;
 
 /// <summary>
 /// Class of mathematical object - matrix.
@@ -20,7 +22,7 @@ public class Matrix
     /// <summary>
     /// Representation of matrix.
     /// </summary>
-    public List<List<int>> Content;
+    public List<List<long>> Content;
 
     /// <summary>
     /// Constructor for empty matrix.
@@ -29,17 +31,26 @@ public class Matrix
     {
         Width = 0;
         Height = 0;
-        Content = new List<List<int>>();
+        Content = new List<List<long>>();
     }
 
     /// <summary>
     /// Contructor for matrix with given width and height.
     /// </summary>
-    public Matrix(int width, int height)
+    public Matrix(int height, int width)
     {
         Width = width;
         Height = height;
-        Content = new List<List<int>>();
+        Content = new List<List<long>>();
+        for (int i = 0; i < Height; ++i)
+        {
+            var currentRow = new List<long>();
+            for (int j = 0; j < Width; ++j)
+            {
+                currentRow.Add(0);
+            }
+            Content.Add(currentRow);
+        }
     }
 
     /// <summary>
@@ -68,28 +79,56 @@ public class Matrix
             throw new NotSupportedException("Нельзя умножать матрицы, где количество элементов строки первой матрицы, " +
                 "отличается от количества элементов столбца второй матрицы!");
         }
-        var resultMatrix = new Matrix(firstMatrix.Width, secondMatrix.Height);
+        var resultMatrix = new Matrix(firstMatrix.Height, secondMatrix.Width);
         for (int i = 0; i < firstMatrix.Height; ++i)
         {
-            var currentRow = new List<int>();
             for (int j = 0; j < secondMatrix.Width; ++j)
             {
-                var currentNumber = 0;
-                for (int k = 0; k < firstMatrix.Width; ++k)
-                {
-                    currentNumber += firstMatrix.Content[i][k] * secondMatrix.Content[k][j];
-                }
-                currentRow.Add(currentNumber);
+                resultMatrix.Content[i][j] = GetElement(firstMatrix, secondMatrix, i * firstMatrix.Width + j);
             }
-            resultMatrix.Content.AddRange(new List<List<int>>() { currentRow });
         }
         return resultMatrix;
     }
 
-    //public static Matrix MultiplicateWithMultithreading(Matrix firstMatrix, Matrix secondMatrix)
-    //{
+    /// <summary>
+    /// Method, which multiplicate two matrix, using multithreading.
+    /// </summary>
+    /// <param name="firstMatrix">First matrix in multiplication.</param>
+    /// <param name="secondMatrix">Second matrix in multiplication.</param>
+    /// <returns>Result of multiplication - matrix.</returns>
+    /// <exception cref="NotSupportedException">Inappropriate matrix sizes for multiplication.</exception>
+    public static Matrix MultiplicateWithMultithreading(Matrix firstMatrix, Matrix secondMatrix)
+    {
+        if (firstMatrix.Width != secondMatrix.Height)
+        {
+            throw new NotSupportedException("Нельзя умножать матрицы, где количество элементов строки первой матрицы, " +
+                "отличается от количества элементов столбца второй матрицы!");
+        }
+        var maxCountOfThreads = Environment.ProcessorCount;
+        int countOfElementsInResultMatrix = firstMatrix.Height * secondMatrix.Width;
+        var countOfThreads = countOfElementsInResultMatrix >= maxCountOfThreads ? maxCountOfThreads : countOfElementsInResultMatrix;
+        var threads = new Thread[countOfThreads];
+        var resultMatrix = new Matrix(firstMatrix.Height, secondMatrix.Width);
+        
+        int countOfElementsForEachThread = Convert.ToInt32(Math.Ceiling((double)countOfElementsInResultMatrix / countOfThreads));
 
-    //}
+        for (var i = 0; i < threads.Length; ++i)
+        {
+            var localI = i;
+            threads[i] = new Thread(() => {
+                for (var j = localI * countOfElementsForEachThread; j < (localI + 1) * countOfElementsForEachThread && j < countOfElementsInResultMatrix; ++j)
+                    resultMatrix.Content[j / firstMatrix.Width][j % firstMatrix.Width] = GetElement(firstMatrix, secondMatrix, j);
+            });
+            threads[i].Priority = ThreadPriority.Highest;
+        }
+
+        foreach (var thread in threads)
+            thread.Start();
+        foreach (var thread in threads)
+            thread.Join();
+
+        return resultMatrix;
+    }
 
     /// <summary>
     /// Method, which reads matrix from file.
@@ -100,11 +139,11 @@ public class Matrix
     /// <exception cref="FileNotFoundException">File with such path doesn't exists.</exception>
     /// <exception cref="ArgumentException">File was empty.</exception>
     /// <exception cref="FormatException">Wrong format of matrix.</exception>
-    private static List<List<int>> Read(string path)
+    private static List<List<long>> Read(string path)
     {
         if (path == null)
         {
-            throw new ArgumentNullException(path, "Путь до файла не был введен!");
+            throw new ArgumentNullException(nameof(path), "Путь до файла не был введен!");
         }
         if (!File.Exists(path))
         {
@@ -115,14 +154,14 @@ public class Matrix
         {
             throw new ArgumentException("Файл пуст!");
         }
-        List<List<int>> matrixInt = new();
+        List<List<long>> matrixInt = new();
         foreach (var substring in matrix)
         {
             try
             {
-                matrixInt.Add(substring.Split(' ').Select(Int32.Parse).ToList());
+                matrixInt.Add(substring.Split(' ').Select(Int64.Parse).ToList());
             }
-            catch (System.FormatException)
+            catch (FormatException)
             {
                 throw new FormatException("Неверная запись матрицы!");
             }
@@ -168,8 +207,12 @@ public class Matrix
     /// <param name="matrix">Matrix containing the result of multiplication.</param>
     public static void Write(string path, Matrix matrix)
     {
+       if (string.IsNullOrEmpty(path))
+       {
+            throw new ArgumentNullException(nameof(path), "Путь до файла не был введен!");
+       }
        var matrixToWrite = ToStringArray(matrix);
-       File.WriteAllText("../../../../ResultMatrix.txt", matrixToWrite);
+       File.WriteAllText(path, matrixToWrite);
     }
 
     /// <summary>
@@ -186,8 +229,54 @@ public class Matrix
             {
                 matrixInStringArray.Append(column.ToString() + " ");
             }
-            matrixInStringArray.Append("\n");
+            matrixInStringArray.Remove(matrixInStringArray.Length - 1,1);
+            matrixInStringArray.Append('\n');
         }
         return matrixInStringArray.ToString();
     }
+
+    /// <summary>
+    /// Mthod that allows you to calculate a certain element of the matrix 
+    /// </summary>
+    /// <param name="firstMatrix">First matrix in multiplication.</param>
+    /// <param name="secondMatrix">Second matrix in multiplication.</param>
+    /// <param name="number">Number of element in result matrix</param>
+    /// <returns>Element with such number in result matrix.</returns>
+    private static long GetElement(Matrix firstMatrix, Matrix secondMatrix, int number)
+    {
+        int countOfElementsInRow = firstMatrix.Width;
+        int numberOfRow = number / countOfElementsInRow;
+        int numberOfColumn = number % countOfElementsInRow;
+        long currentElement = 0;
+        for (int i = 0; i < firstMatrix.Width; ++i)
+        {
+            currentElement += firstMatrix.Content[numberOfRow][i] * secondMatrix.Content[i][numberOfColumn];
+        }
+        return currentElement;
+    }
 }
+
+/*
+ Идея для многопоточности - 
+ 1) Создать пустую матрицу
+ 2) По количеству элементов в конечной матрице распределить задачи по потокам
+ 3) Для каждого потока назначить номера элементов, которые мы хотим посчитать
+ 4) С помощью доп функции считать элементы в матрице
+*/
+
+// Функция для генерации больших матриц
+//public static Matrix Generate(int width, int height, int minInt, int maxInt)
+//{
+//    var random = new Random();
+//    var newMatrix = new Matrix(width, height);
+//    for (int i = 0; i < height; ++i)
+//    {
+//        var currentRow = new List<long>();
+//        for (int j = 0; j < width; ++j)
+//        {
+//            currentRow.Add(random.Next(minInt, maxInt));
+//        }
+//        newMatrix.Content.Add(currentRow);
+//    }
+//    return newMatrix;
+//}
