@@ -56,11 +56,11 @@ public class Matrix
     /// <summary>
     /// Constructor for matrix from file.
     /// </summary>
-    /// <param name="path"></param>
+    /// <param name="path">Path to the file, containing the matrix.</param>
     public Matrix(string path)
     {
         Content = Read(path);
-        Check();
+        CheckRows();
         Width = Content[0].Count;
         Height = Content.Count;
     }
@@ -114,11 +114,14 @@ public class Matrix
         for (var i = 0; i < threads.Length; ++i)
         {
             var localI = i;
-            threads[i] = new Thread(() => {
+            threads[i] = new Thread(() =>
+            {
                 for (var j = localI * countOfElementsForEachThread; j < (localI + 1) * countOfElementsForEachThread && j < countOfElementsInResultMatrix; ++j)
                     resultMatrix.Content[j / firstMatrix.Width][j % firstMatrix.Width] = GetElement(firstMatrix, secondMatrix, j);
-            });
-            threads[i].Priority = ThreadPriority.Highest;
+            })
+            {
+                Priority = ThreadPriority.Highest
+            };
         }
 
         foreach (var thread in threads)
@@ -172,14 +175,14 @@ public class Matrix
     /// Method, which checks the same number of elements in each row.
     /// </summary>
     /// <exception cref="FormatException">Different number of elements in rows.</exception>
-    private void Check()
+    private void CheckRows()
     {
         int currentLengthOLine = Content[0].Count;
         foreach(var line in Content)
         {
             if (line.Count != currentLengthOLine)
             {
-                throw new FormatException("Количество элементов в строках матрицы не одинаковое!");
+                throw new ArgumentException("Количество элементов в строках матрицы не одинаковое!");
             }
         }
     }
@@ -235,7 +238,7 @@ public class Matrix
     }
 
     /// <summary>
-    /// Mthod that allows you to calculate a certain element of the matrix 
+    /// Method that allows you to calculate a certain element of the matrix
     /// </summary>
     /// <param name="firstMatrix">First matrix in multiplication.</param>
     /// <param name="secondMatrix">Second matrix in multiplication.</param>

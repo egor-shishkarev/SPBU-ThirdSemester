@@ -44,8 +44,34 @@ if (string.IsNullOrEmpty(File.ReadAllText(args[1])))
     return -1;
 }
 
-var firstMatrix = new Matrix(args[0]);
-var secondMatrix = new Matrix(args[1]);
+Matrix firstMatrix;
+Matrix secondMatrix;
+
+try
+{
+    firstMatrix = new Matrix(args[0]);
+} catch (FormatException)
+{
+    Console.Error.WriteLine("Неподдерживаемые символы в первой матрице!");
+    return -1;
+} catch (ArgumentException)
+{
+    Console.Error.WriteLine("Различное количество символов в строках первой матрицы!");
+    return -1;
+}
+
+try
+{
+    secondMatrix = new Matrix(args[1]);
+} catch(FormatException)
+{
+    Console.Error.WriteLine("Неподдерживаемые символы во второй матрице!");
+    return -1;
+} catch(ArgumentException)
+{
+    Console.Error.WriteLine("Различное количество символов в строках второй матрицы!");
+    return -1;
+}
 
 if (firstMatrix.Width != secondMatrix.Height)
 {

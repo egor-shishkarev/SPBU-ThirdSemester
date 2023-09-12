@@ -54,7 +54,7 @@ public class MatricesTests
     [TestCase("../../../../TestFiles/WrongCountOfElementsInRow.txt")]
     public void WrongCountOfElementsInRowsShouldThrowExceptionTest(string path)
     {
-        Assert.Throws<FormatException>(() => new Matrix(path));
+        Assert.Throws<ArgumentException>(() => new Matrix(path));
     }
 
     [TestCase("../../../../TestFiles/CommonMatrix.txt")]
@@ -101,4 +101,3 @@ public class MatricesTests
         Assert.That(CompareTwoMatrix(matrixWithMultithreading, matrixWithoutMultithreading), Is.True);
     }
 }
-
