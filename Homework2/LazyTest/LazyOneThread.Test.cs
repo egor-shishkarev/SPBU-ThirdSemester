@@ -1,6 +1,6 @@
-using System.Text;
-
 namespace Lazy.Test;
+
+using System.Text;
 
 public class LazyOneThreadTest
 {

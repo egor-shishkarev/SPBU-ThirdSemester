@@ -35,3 +35,22 @@ foreach (var thread in threads)
 {
     thread.Join();
 }
+
+var newThreads = new Thread[8];
+int sum = 0;
+for (int i = 0; i < newThreads.Length; ++i)
+{
+    newThreads[i] = new Thread(() => { for (int i = 0; i < 10000; ++i) { sum += 1; }; });
+}
+
+foreach(var thread in newThreads)
+{
+    thread.Start();
+}
+
+foreach (var thread in threads)
+{
+    thread.Join();
+}
+
+Console.WriteLine(sum);
