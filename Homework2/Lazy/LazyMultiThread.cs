@@ -8,7 +8,7 @@ public class LazyMultiThread<T> : ILazy<T>
 
     private volatile bool isTriggered = false;
 
-    private object lockObject = new();
+    private readonly object lockObject = new();
 
     public LazyMultiThread (Func<T> supplier)
     {

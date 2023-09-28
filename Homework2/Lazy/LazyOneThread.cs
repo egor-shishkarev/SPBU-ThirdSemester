@@ -17,8 +17,8 @@ public class LazyOneThread<T> : ILazy<T>
     {
         if (!isTriggered)
         {
-            isTriggered = true;
-            value = supplier();
+           value = supplier();
+           isTriggered = true;
         }
         return value;
     }
