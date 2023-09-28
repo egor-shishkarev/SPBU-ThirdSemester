@@ -2,24 +2,24 @@
 
 public class LazyOneThread<T> : ILazy<T>
 {
-    private T? Value;
+    private T? value;
 
-    private readonly Func<T> Function;
+    private readonly Func<T> supplier;
 
-    private bool IsTriggered = false;
+    private bool isTriggered = false;
 
-    public LazyOneThread (Func<T> function) 
+    public LazyOneThread (Func<T> supplier) 
     {
-        Function = function;
+        this.supplier = supplier;
     }
 
     public T? Get()
     {
-        if (!IsTriggered)
+        if (!isTriggered)
         {
-            IsTriggered = true;
-            Value = Function();
+            isTriggered = true;
+            value = supplier();
         }
-        return Value;
+        return value;
     }
 }
