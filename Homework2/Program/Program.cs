@@ -10,20 +10,19 @@ static int func(int x)
     return value;
 }
 
-LazyOneThread<int> lazy = new(() => func(1));
+LazyOneThread<int> lazyOneThread = new(() => func(1));
 
-lazy.Get();
-lazy.Get();
+Console.WriteLine($"First call of Lazy - {lazyOneThread.Get()}");
+Console.WriteLine($"Second call of Lazy - {lazyOneThread.Get()}");
 
 var threads = new Thread[8];
-var lazy2 = new LazyMultiThread<int>(() => func(1));
+var lazyMultiThread = new LazyMultiThread<int>(() => func(1));
 for (int i = 0; i < 8; ++i)
 {
     var locali = i;
     threads[i] = new Thread(() =>
     {
-        Console.WriteLine(lazy2.Get());
-        Console.WriteLine($"Thread {locali} is working!");
+        Console.WriteLine($"Thread {locali}. Lazy call - {lazyMultiThread.Get()}");
     });
 }
 
@@ -35,22 +34,3 @@ foreach (var thread in threads)
 {
     thread.Join();
 }
-
-var newThreads = new Thread[8];
-int sum = 0;
-for (int i = 0; i < newThreads.Length; ++i)
-{
-    newThreads[i] = new Thread(() => { for (int i = 0; i < 10000; ++i) { sum += 1; }; });
-}
-
-foreach(var thread in newThreads)
-{
-    thread.Start();
-}
-
-foreach (var thread in threads)
-{
-    thread.Join();
-}
-
-Console.WriteLine(sum);
