@@ -7,9 +7,8 @@
 Когда кто-либо набирает в консоли “exit”, соединение закрывается и приложения заканчивают работу.
 Нужны юнит-тесты*/
 
-// "C:\Users\Егор\source\repos\SPBU-ThirdSemester\Test1\Chat\bin\Debug\net7.0\Chat.exe"
+// "C:\Users\Егор\source\repos\SPBU-ThirdSemester\Test1\Chat\bin\Debug\net7.0\Chat.exe" 8888
 using Chat;
-
 
 if (args.Length < 1)
 {
@@ -29,7 +28,6 @@ if (args.Length == 1)
     }
 }
 
-
 if (args.Length == 2)
 {
     if (Int32.TryParse(args[0], out int port))
@@ -41,7 +39,5 @@ if (args.Length == 2)
         }
     }
 }
-
-
 
 return 0;

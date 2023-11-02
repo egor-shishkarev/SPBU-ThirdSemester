@@ -30,15 +30,16 @@ public class Server
         {
             listener.Start();
             Console.WriteLine("Server is working, waiting for clients...");
+            client = await listener.AcceptTcpClientAsync();
+            Console.WriteLine("Connected to the client");
+            stream = client.GetStream();
+            reader = new StreamReader(stream);
+            writer = new StreamWriter(stream);
+
             while (true)
             {
-                client = await listener.AcceptTcpClientAsync();
-                Console.WriteLine("Connected to the client");
-                stream = client.GetStream();
-                reader = new StreamReader(stream);
-                writer = new StreamWriter(stream);
-                Task.Run(SendMessage);
-                await ReceiveMessage();
+                Task.Run(async () => Console.WriteLine($"Client: {await ReceiveMessage()}"));
+                Task.Run(() => SendMessage(Console.ReadLine()));
             }
         }
         catch (Exception e)
@@ -51,33 +52,26 @@ public class Server
         }
     }
 
-    private async Task ReceiveMessage()
+    public async Task<string> ReceiveMessage()
     {
-        while (true)
+        var message = await reader.ReadLineAsync();
+        if (message == "exit")
         {
-            var message = await reader.ReadLineAsync();
-            if (message == "exit")
-            {
-                //Disconnect();
-                Environment.Exit(0);
-            }
-            Console.WriteLine($"{message}");
+            Disconnect();
+            Environment.Exit(0);
         }
+        return message;
     }
 
-    private async Task SendMessage()
+    public async Task SendMessage(string message)
     {
-        while (true)
+        if (message == "exit")
         {
-            var message = Console.ReadLine();
-            if (message == "exit")
-            {
-                //Disconnect();
-                Environment.Exit(0);
-            }
-            await writer.WriteLineAsync(message);
-            await writer.FlushAsync();
+            Disconnect();
+            Environment.Exit(0);
         }
+        await writer.WriteLineAsync(message);
+        await writer.FlushAsync();
     }
 
     private void Disconnect()
