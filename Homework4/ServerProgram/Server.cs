@@ -112,7 +112,7 @@ public class Server
             response.Append(" " + file + " false");
         }
 
-        response.Append(" \n");
+        response.Append("\n");
         await stream.WriteAsync(Encoding.UTF8.GetBytes(response.ToString()));
         await stream.FlushAsync();
     }
