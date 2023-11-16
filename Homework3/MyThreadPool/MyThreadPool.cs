@@ -31,7 +31,7 @@ public class MyThreadPool
     {
         cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
-        var newTask = new MyTask<TResult>(task);
+        var newTask = new MyTask<TResult>(task, cancellationTokenSource.Token, taskQueue);
         taskQueue.Add(newTask.Start);
         return newTask;
     }
@@ -53,6 +53,8 @@ public class MyThreadPool
 
         private readonly CancellationToken token;
 
+        private bool IsWorking { get; set; }
+
         public MyThread(BlockingCollection<Action> taskQueue, CancellationToken token)
         {
             this.token = token;
@@ -69,7 +71,9 @@ public class MyThreadPool
                 {
                     if (taskQueue.TryTake(out var task)) 
                     {
+                        IsWorking = true;
                         task();
+                        IsWorking = false;
                     }
                 } 
                 else if (token.IsCancellationRequested)
@@ -97,6 +101,12 @@ public class MyThreadPool
 
         private readonly ManualResetEvent resetEvent = new(false);
 
+        private readonly CancellationToken token;
+
+        private readonly BlockingCollection<Action> nextTasks;
+
+        private readonly BlockingCollection<Action> taskQueue;
+
         public TResult Result
         {
             get
@@ -114,10 +124,13 @@ public class MyThreadPool
             }
         }
 
-        public MyTask(Func<TResult> task)
+        public MyTask(Func<TResult> task, CancellationToken token, BlockingCollection<Action> taskQueue)
         {
             IsCompleted = false;
             Func = task;
+            this.token = token;
+            nextTasks = new();
+            this.taskQueue = taskQueue;
         }
 
         public void Start()
@@ -132,6 +145,24 @@ public class MyThreadPool
             }
             resetEvent.Set();
             IsCompleted = true;
+            foreach(var task in nextTasks)
+            {
+                taskQueue.Add(task);
+            }
+        }
+
+        public IMyTask<TNewResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> task)
+        {
+            token.ThrowIfCancellationRequested();
+            var newTask = new MyTask<TNewResult>(() => task(Result), token, taskQueue);
+            if (IsCompleted)
+            {
+                taskQueue.Add(newTask.Start);
+                return newTask;
+            }
+
+            nextTasks.Add(newTask.Start);
+            return newTask;
         }
     }
 }

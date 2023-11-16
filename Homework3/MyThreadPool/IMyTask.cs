@@ -9,5 +9,5 @@ public interface IMyTask<TResult>
     public TResult Result { get; }
 
     // Allows you to apply a task to a function of type Func<Result, TNewResult>
-    // public IMyTask<TResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> function);
+    public IMyTask<TNewResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> function);
 }
