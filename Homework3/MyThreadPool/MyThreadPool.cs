@@ -10,6 +10,10 @@ public class MyThreadPool
 
     private readonly CancellationTokenSource cancellationTokenSource;
 
+    public int CountOfThreads {
+        get => threads.Length;
+    }
+
     public MyThreadPool(int numberOfThreads)
     {
         if (numberOfThreads <= 0)
@@ -29,6 +33,10 @@ public class MyThreadPool
 
     public IMyTask<TResult> Submit<TResult>(Func<TResult> task) 
     {
+        if (task == null)
+        {
+            throw new ArgumentNullException("Task can't be null");
+        }
         cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
         var newTask = new MyTask<TResult>(task, cancellationTokenSource.Token, taskQueue);
