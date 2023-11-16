@@ -4,9 +4,9 @@ namespace ThreadPool;
 
 public class MyThreadPool
 {
-    private BlockingCollection<Action> taskQueue;
+    private readonly BlockingCollection<Action> taskQueue;
 
-    private MyThread[] threads;
+    private readonly MyThread[] threads;
 
     
     public MyThreadPool(int numberOfThreads)
@@ -25,9 +25,11 @@ public class MyThreadPool
         }
     }
 
-    public void Submit<TResult>(Func<TResult> task) 
+    public IMyTask<TResult> Submit<TResult>(Func<TResult> task) 
     {
-        taskQueue.TryAdd(() => task());
+        var newTask = new MyTask<TResult>(task);
+        taskQueue.Add(newTask.Start);
+        return newTask;
     }
 
     public class MyThread
@@ -49,10 +51,62 @@ public class MyThreadPool
             {
                 if (taskQueue.Count > 0)
                 {
-                    taskQueue.TryTake(out var task);
-                    task();
+                    if (taskQueue.TryTake(out var task)) 
+                    {
+                        task();
+                    }
                 }
             }
+        }
+    }
+
+    private class MyTask<TResult> : IMyTask<TResult>
+    {
+        public bool IsCompleted { get; private set; }
+
+        public Func<TResult> Func { get; private set; }
+
+        private Exception? exception = null;
+
+        private TResult result;
+
+        private readonly AutoResetEvent resetEvent = new(false);
+
+        public TResult Result
+        {
+            get
+            {
+                if (!IsCompleted)
+                {
+                    resetEvent.WaitOne();
+                }
+                
+                if (exception != null)
+                {
+                    throw new AggregateException(exception);
+                }
+                return result;
+            }
+        }
+
+        public MyTask(Func<TResult> task)
+        {
+            IsCompleted = false;
+            Func = task;
+        }
+
+        public void Start()
+        {
+            try
+            {
+                result = Func();
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+            }
+            resetEvent.Set();
+            IsCompleted = true;
         }
     }
 }
