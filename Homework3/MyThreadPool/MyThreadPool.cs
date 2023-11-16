@@ -8,7 +8,8 @@ public class MyThreadPool
 
     private readonly MyThread[] threads;
 
-    
+    private readonly CancellationTokenSource cancellationTokenSource;
+
     public MyThreadPool(int numberOfThreads)
     {
         if (numberOfThreads <= 0)
@@ -18,28 +19,43 @@ public class MyThreadPool
 
         threads = new MyThread[numberOfThreads];
         taskQueue = new BlockingCollection<Action>();
+        cancellationTokenSource = new();
 
         for (int i = 0; i < numberOfThreads; ++i)
         {
-            threads[i] = new MyThread(taskQueue);
+            threads[i] = new MyThread(taskQueue, cancellationTokenSource.Token);
         }
     }
 
     public IMyTask<TResult> Submit<TResult>(Func<TResult> task) 
     {
+        cancellationTokenSource.Token.ThrowIfCancellationRequested();
+
         var newTask = new MyTask<TResult>(task);
         taskQueue.Add(newTask.Start);
         return newTask;
     }
 
+    public void Shutdown()
+    {
+        cancellationTokenSource.Cancel();
+        foreach (var thread in threads)
+        {
+            thread.Join();
+        }
+    }
+
     public class MyThread
     {
-        protected internal Thread thread;
+        private readonly Thread thread;
 
-        protected internal BlockingCollection<Action> taskQueue;
+        private readonly BlockingCollection<Action> taskQueue;
 
-        public MyThread(BlockingCollection<Action> taskQueue)
+        private readonly CancellationToken token;
+
+        public MyThread(BlockingCollection<Action> taskQueue, CancellationToken token)
         {
+            this.token = token;
             this.taskQueue = taskQueue;
             thread = new Thread(Start);
             thread.Start();
@@ -55,8 +71,17 @@ public class MyThreadPool
                     {
                         task();
                     }
+                } 
+                else if (token.IsCancellationRequested)
+                {
+                    break;
                 }
             }
+        }
+
+        protected internal void Join()
+        {
+            thread.Join();
         }
     }
 
@@ -70,7 +95,7 @@ public class MyThreadPool
 
         private TResult result;
 
-        private readonly AutoResetEvent resetEvent = new(false);
+        private readonly ManualResetEvent resetEvent = new(false);
 
         public TResult Result
         {
