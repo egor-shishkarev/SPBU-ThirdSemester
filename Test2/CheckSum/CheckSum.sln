@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckSum", "CheckSum.csproj", "{BAD963C9-D96A-4C28-81CE-743220462027}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MD5", "..\MD5\MD5.csproj", "{B2EDB496-1A60-482F-A567-92FAF321C2DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckSumTests", "..\CheckSumTests\CheckSumTests.csproj", "{EB6DBD1F-FEE8-411F-91D9-BE902E7CFE95}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BAD963C9-D96A-4C28-81CE-743220462027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAD963C9-D96A-4C28-81CE-743220462027}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAD963C9-D96A-4C28-81CE-743220462027}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAD963C9-D96A-4C28-81CE-743220462027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2EDB496-1A60-482F-A567-92FAF321C2DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2EDB496-1A60-482F-A567-92FAF321C2DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2EDB496-1A60-482F-A567-92FAF321C2DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2EDB496-1A60-482F-A567-92FAF321C2DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB6DBD1F-FEE8-411F-91D9-BE902E7CFE95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB6DBD1F-FEE8-411F-91D9-BE902E7CFE95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB6DBD1F-FEE8-411F-91D9-BE902E7CFE95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB6DBD1F-FEE8-411F-91D9-BE902E7CFE95}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A333BB65-0EF4-4207-82B5-7077B218DE4C}
+	EndGlobalSection
+EndGlobal
