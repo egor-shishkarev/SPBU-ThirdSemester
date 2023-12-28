@@ -14,7 +14,7 @@ public class LazyOneThread<T> : ILazy<T>
     /// <summary>
     /// Function, which we want to lazy initializate. 
     /// </summary>
-    private readonly Func<T> supplier;
+    private Func<T>? supplier;
 
     /// <summary>
     /// Trigger to notify if supplier was calculated.
@@ -38,8 +38,9 @@ public class LazyOneThread<T> : ILazy<T>
     {
         if (!isTriggered)
         {
-           value = supplier();
-           isTriggered = true;
+            value = supplier!();
+            supplier = null;
+            isTriggered = true;
         }
         return value;
     }
