@@ -1,7 +1,6 @@
 ﻿namespace Reflection;
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 public class Reflector
 {
@@ -38,7 +37,7 @@ public class Reflector
             if (typeName == "MethodInfo")
             {
                 var _ = mi as MethodInfo;
-                writer.WriteLine($"\t{} {mi.Name}()" + " {};");
+                writer.WriteLine($"\t{getAttributeOfInfo((mi as MethodInfo).Attributes)} {mi.Name}()" + " {};");
             }
         }
         writer.WriteLine("}");
@@ -80,6 +79,10 @@ public class Reflector
     private string getAttributeOfInfo(MethodAttributes info)
     {
         Console.WriteLine(info);
+        if (info.HasFlag(MethodAttributes.Public))
+        {
+
+        }
         return "";
     }
 }

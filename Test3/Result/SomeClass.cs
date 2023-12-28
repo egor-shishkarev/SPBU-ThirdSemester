@@ -1,6 +1,6 @@
 public class SomeClass
 {
-	privatescope, public, static, hidebysig Print(){};
+	 Print() {};
 	private static System.Int32 size;
 
 	public static System.String name;
