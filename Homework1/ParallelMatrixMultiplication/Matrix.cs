@@ -118,10 +118,7 @@ public class Matrix
             {
                 for (var j = localI * countOfElementsForEachThread; j < (localI + 1) * countOfElementsForEachThread && j < countOfElementsInResultMatrix; ++j)
                     resultMatrix.Content[j / firstMatrix.Width][j % firstMatrix.Width] = GetElement(firstMatrix, secondMatrix, j);
-            })
-            {
-                Priority = ThreadPriority.Highest
-            };
+            });
         }
 
         foreach (var thread in threads)

@@ -1,6 +1,10 @@
-﻿using Matrices;
+﻿using BenchmarkDotNet.Running;
+using Matrices;
+
 
 const string outputPath = "../../../../ResultMatrix.txt";
+
+// var summary = BenchmarkRunner.Run<BenchmarkMatrix>(); // - Запуск бенчмарка программы
 
 if (args.Length < 2)
 {

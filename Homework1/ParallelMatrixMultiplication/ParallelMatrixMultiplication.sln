@@ -21,7 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решен
 		..\TestFiles\Matrix3x3.txt = ..\TestFiles\Matrix3x3.txt
 		..\TestFiles\MatrixWithFractionalNumbers.txt = ..\TestFiles\MatrixWithFractionalNumbers.txt
 		..\TestFiles\NotSupportedSymbols.txt = ..\TestFiles\NotSupportedSymbols.txt
-		..\ResultMatrix.txt = ..\ResultMatrix.txt
 		..\TestFiles\WrongCountOfElementsInRow.txt = ..\TestFiles\WrongCountOfElementsInRow.txt
 		..\TestFiles\WrongFormatOfMatrix.txt = ..\TestFiles\WrongFormatOfMatrix.txt
 	EndProjectSection
