@@ -2,17 +2,13 @@
 
 namespace ThreadPool;
 
-public class MyThreadPool
+public class MyThreadPool // Нарушен порядок элементов в классах (Проверить) [Поля, конструктор, свойства, методы, классы ]
 {
     private readonly BlockingCollection<Action> taskQueue;
 
     private readonly MyThread[] threads;
 
     private readonly CancellationTokenSource cancellationTokenSource;
-
-    public int CountOfThreads {
-        get => threads.Length;
-    }
 
     public MyThreadPool(int numberOfThreads)
     {
@@ -31,16 +27,18 @@ public class MyThreadPool
         }
     }
 
-    public IMyTask<TResult> Submit<TResult>(Func<TResult> task) 
+    public int CountOfThreads => threads.Length;
+
+    public IMyTask<TResult> Submit<TResult>(Func<TResult> task)
     {
         if (task == null)
         {
-            throw new ArgumentNullException("Task can't be null");
+            throw new ArgumentNullException(nameof(task), "Task can't be null");
         }
         cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
         var newTask = new MyTask<TResult>(task, cancellationTokenSource.Token, taskQueue);
-        taskQueue.Add(newTask.Start);
+        taskQueue.Add(newTask.Start); // Залочить + добавить lock на очередь задач
         return newTask;
     }
 
@@ -53,7 +51,7 @@ public class MyThreadPool
         }
     }
 
-    public class MyThread
+    private class MyThread // Сделать класс приватным
     {
         private readonly Thread thread;
 
@@ -61,7 +59,7 @@ public class MyThreadPool
 
         private readonly CancellationToken token;
 
-        private bool IsWorking { get; set; }
+        private bool IsWorking;
 
         public MyThread(BlockingCollection<Action> taskQueue, CancellationToken token)
         {
@@ -71,17 +69,18 @@ public class MyThreadPool
             thread.Start();
         }
 
-        private void Start()
+        public void Start()
         {
-            while (true)
+            while (!token.IsCancellationRequested) // Реализовать ту же идею с waitOne, что и в result - потоки стоят на ResetEvent в
+                // Отсутствии задач, чтобы не грузить проц
             {
                 if (taskQueue.Count > 0)
                 {
                     if (taskQueue.TryTake(out var task)) 
                     {
-                        IsWorking = true;
+                        this.IsWorking = true;
                         task();
-                        IsWorking = false;
+                        this.IsWorking = false;
                     }
                 } 
                 else if (token.IsCancellationRequested)
@@ -91,7 +90,7 @@ public class MyThreadPool
             }
         }
 
-        protected internal void Join()
+        public void Join()
         {
             thread.Join();
         }
@@ -119,11 +118,7 @@ public class MyThreadPool
         {
             get
             {
-                if (!IsCompleted)
-                {
-                    resetEvent.WaitOne();
-                }
-                
+                resetEvent.WaitOne();
                 if (exception != null)
                 {
                     throw new AggregateException(exception);
@@ -132,7 +127,8 @@ public class MyThreadPool
             }
         }
 
-        public MyTask(Func<TResult> task, CancellationToken token, BlockingCollection<Action> taskQueue)
+        public MyTask(Func<TResult> task, CancellationToken token, BlockingCollection<Action> taskQueue) // Лучше передавать экземпляр пула и 
+            // добавлять с помощью submit + ругается компилятор
         {
             IsCompleted = false;
             Func = task;
@@ -153,7 +149,7 @@ public class MyThreadPool
             }
             resetEvent.Set();
             IsCompleted = true;
-            foreach(var task in nextTasks)
+            foreach (var task in nextTasks)
             {
                 taskQueue.Add(task);
             }

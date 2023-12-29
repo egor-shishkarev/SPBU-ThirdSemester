@@ -15,6 +15,8 @@ public class MyThreadPoolTests
     [TestCase(3)]
     [TestCase(6)]
     [TestCase(12)]
+    // Тщательнее проверить количество потоков, использовать n задач с resetEvent-ами, и проверять, что все потоки действительно заняты
+    // Или заполнить пул n задачами и добавить одну + проверить что очередь не пуста
     public void ThreadPoolMustContainAsMuchThreadsAsWePassInTheConstructorTest(int numberOfThreads)
     {
         var threadPool = new MyThreadPool(numberOfThreads);
@@ -57,4 +59,6 @@ public class MyThreadPoolTests
 
         Assert.That(task.IsCompleted && task.Result == 8, Is.True);
     }
+
+    // Добавить тесты на конкурентный доступ к пулу
 }
